@@ -43,16 +43,22 @@ function g5_path()
     $port = ($_SERVER['SERVER_PORT'] == 80 || $_SERVER['SERVER_PORT'] == 443) ? '' : ':'.$_SERVER['SERVER_PORT']; 
     $http = 'http' . ((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS']=='on') ? 's' : '') . '://'; 
     $user = str_replace(preg_replace($pattern, '', $server_script_filename), '', $server_script_name); 
+	//$user = str_replace(preg_replace($pattern, '', $server_script_name), '', $server_script_name); 
     $host = isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : $_SERVER['SERVER_NAME']; 
     if(isset($_SERVER['HTTP_HOST']) && preg_match('/:[0-9]+$/', $host)) 
         $host = preg_replace('/:[0-9]+$/', '', $host); 
     $host = preg_replace("/[\<\>\'\"\\\'\\\"\%\=\(\)\/\^\*]/", '', $host); 
-    $result['url'] = $http.$host.$port.$user.$root; 
+    $u = explode("/",$user);
+	$uu = array_slice($u,0,count($u)-1);
+	$user = implode("/",$uu);
+	$user = str_replace('/shop','',$user);
+	$result['url'] = $http.$host.$port.$user;
+	//$result['url'] = $http.$host.$port.$user.$root;
     return $result;
 }
 
 $g5_path = g5_path();
-
+//die($g5_path['url']);
 include_once($g5_path['path'].'/config.php');   // 설정 파일
 
 unset($g5_path);
